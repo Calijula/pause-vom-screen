@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pause vom Screen. Nicht vom Leben.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B3A5C;
+    --navy-l:#2C5282;
+    --mint:#2D9E8F;
+    --mint-l:#E8F6F4;
+    --coral:#E05C5C;
+    --coral-l:#FDECEC;
+    --gold:#C49A2B;
+    --gold-l:#FBF3E0;
+    --sage:#5A8A6A;
+    --sage-l:#EBF4EE;
+    --cream:#FAF6EF;
+    --dark:#1A1F2E;
+    --mid:#5A6070;
+    --border:#E4DFD3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',sans-serif;
+    color:var(--dark);
+    background:var(--cream);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-family:'Fraunces',serif; line-height:1.15; font-weight:700;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  a{text-decoration:none;}
+
+  /* ============ HERO ============ */
+  .hero{
+    background:var(--navy);
+    color:#fff;
+    padding:64px 0 0;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; right:-120px; top:-120px;
+    width:340px; height:340px; border-radius:50%;
+    background:var(--navy-l); opacity:.5;
+  }
+  .hero-inner{
+    display:grid; grid-template-columns:1.1fr .9fr; gap:48px;
+    align-items:center; padding-bottom:56px; position:relative; z-index:2;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:.78rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--gold); background:rgba(196,154,43,.14);
+    padding:6px 14px; border-radius:999px; margin-bottom:22px;
+  }
+  .hero h1{font-size:clamp(2.4rem,5vw,3.6rem); margin-bottom:18px;}
+  .hero h1 .accent{color:var(--mint);}
+  .hero p.lead{font-size:1.15rem; color:#C8D8E4; max-width:480px; margin-bottom:30px;}
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap; align-items:center;}
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    font-weight:700; font-size:1.02rem;
+    padding:16px 30px; border-radius:10px;
+    transition:transform .15s ease, box-shadow .15s ease;
+    border:none; cursor:pointer;
+  }
+  .btn-primary{background:var(--mint); color:#fff; box-shadow:0 10px 24px -10px rgba(45,158,143,.7);}
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 14px 28px -10px rgba(45,158,143,.8);}
+  .btn-ghost{color:#fff; border:1.5px solid rgba(255,255,255,.35);}
+
+  /* signature element: scroll -> pause visual */
+  .device-row{
+    position:relative; display:flex; align-items:center; justify-content:center;
+    height:340px;
+  }
+  .phone{
+    width:108px; height:220px; border-radius:18px;
+    background:#0F2A45; border:2px solid rgba(255,255,255,.08);
+    position:absolute; padding:14px 10px;
+    box-shadow:0 20px 40px -16px rgba(0,0,0,.5);
+  }
+  .phone .dot{
+    width:8px; height:8px; border-radius:50%; background:var(--coral);
+    position:absolute; box-shadow:0 0 0 4px rgba(224,92,92,.18);
+  }
+  .phone .line{height:7px; border-radius:4px; background:rgba(255,255,255,.12); margin-bottom:8px;}
+  .phone.p1{left:0; top:14px; transform:rotate(-9deg); opacity:.55;}
+  .phone.p2{left:64px; top:42px; transform:rotate(-3deg); opacity:.85; z-index:2;}
+  .phone.p3{
+    left:150px; top:10px; z-index:3;
+    background:var(--cream); border-color:var(--border);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .phone.p3 .moon{
+    width:46px; height:46px; border-radius:50%;
+    background:linear-gradient(135deg,var(--mint),var(--sage));
+    display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.4rem; font-weight:800;
+  }
+  .pause-line{
+    position:absolute; left:104px; top:50%; width:60px; height:2px;
+    background:repeating-linear-gradient(90deg,rgba(255,255,255,.4) 0 6px, transparent 6px 12px);
+  }
+
+  /* ============ SECTION HELPERS ============ */
+  section{padding:72px 0;}
+  .tag{
+    display:inline-block; font-size:.78rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--mint); margin-bottom:10px;
+  }
+  .section-title{font-size:clamp(1.7rem,3.4vw,2.4rem); margin-bottom:14px; color:var(--navy);}
+  .section-lead{color:var(--mid); max-width:640px; font-size:1.05rem; margin-bottom:36px;}
+  .center{text-align:center; margin-left:auto; margin-right:auto;}
+
+  /* ============ PAIN POINTS ============ */
+  .pain-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px;}
+  .pain-card{
+    background:#fff; border:1px solid var(--border); border-radius:14px; padding:26px;
+  }
+  .pain-card .num{
+    font-family:'Fraunces',serif; font-size:2.2rem; color:var(--coral); font-weight:700; margin-bottom:6px; display:block;
+  }
+  .pain-card p{color:var(--mid); font-size:.95rem;}
+  .pain-card h4{font-size:1.02rem; margin-bottom:6px; color:var(--dark);}
+
+  /* ============ FOR WHOM ============ */
+  .audience{
+    background:var(--navy); color:#fff; border-radius:20px; padding:48px;
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:28px;
+  }
+  .audience h3{font-size:1.1rem; margin-bottom:8px;}
+  .audience p{color:#C8D8E4; font-size:.94rem;}
+  .audience .icon{
+    width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    font-size:1.3rem; margin-bottom:14px; font-weight:800;
+  }
+  .icon-mint{background:rgba(45,158,143,.22); color:var(--mint);}
+  .icon-coral{background:rgba(224,92,92,.22); color:var(--coral);}
+  .icon-gold{background:rgba(196,154,43,.22); color:var(--gold);}
+
+  /* ============ TABLE OF CONTENTS ============ */
+  .toc{display:flex; flex-direction:column; gap:34px;}
+  .toc-part{
+    display:grid; grid-template-columns:200px 1fr; gap:24px;
+    border-top:1px solid var(--border); padding-top:28px;
+  }
+  .toc-part:first-child{border-top:none; padding-top:0;}
+  .toc-part-label{
+    font-size:.78rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--mid);
+  }
+  .toc-part-title{font-family:'Fraunces',serif; font-size:1.25rem; color:var(--navy); margin-top:4px; font-weight:600;}
+  .toc-chapters{display:flex; flex-direction:column; gap:10px;}
+  .toc-chapter{
+    display:flex; gap:14px; align-items:flex-start;
+    background:#fff; border:1px solid var(--border); border-radius:10px; padding:12px 16px;
+  }
+  .toc-chapter .badge{
+    flex:none; width:30px; height:30px; border-radius:8px;
+    background:var(--navy); color:#fff; font-weight:700; font-size:.92rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .toc-chapter .badge.new{background:var(--gold);}
+  .toc-chapter .ctxt{font-size:.95rem;}
+  .toc-chapter .ctxt b{color:var(--dark);}
+  .toc-chapter .new-tag{
+    font-size:.68rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--gold); margin-left:8px;
+  }
+
+  /* ============ HIGHLIGHT: NEW CHAPTER ============ */
+  .highlight{
+    background:var(--gold-l); border:1px solid #EFD9A6; border-radius:18px;
+    padding:40px; display:grid; grid-template-columns:auto 1fr; gap:28px; align-items:center;
+  }
+  .highlight .badge-lg{
+    width:74px; height:74px; border-radius:16px; background:var(--gold); color:#fff;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:'Fraunces',serif;
+    flex:none;
+  }
+  .highlight .badge-lg span{font-size:.62rem; font-weight:700; letter-spacing:.1em;}
+  .highlight .badge-lg b{font-size:1.7rem;}
+  .highlight h3{color:var(--navy); font-size:1.35rem; margin-bottom:8px;}
+  .highlight p{color:var(--mid); font-size:.97rem;}
+  .highlight ul{margin:12px 0 0 0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:10px;}
+  .highlight li{
+    background:#fff; border:1px solid #EFD9A6; border-radius:999px; padding:6px 14px; font-size:.85rem; color:var(--navy); font-weight:600;
+  }
+
+  /* ============ BONUS ============ */
+  .bonus-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px;}
+  .bonus-card{
+    background:#fff; border:1px solid var(--border); border-radius:14px; padding:26px;
+    border-top:4px solid var(--mint);
+  }
+  .bonus-card.b2{border-top-color:var(--gold);}
+  .bonus-card.b3{border-top-color:var(--coral);}
+  .bonus-card.b4{border-top-color:var(--sage);}
+  .bonus-card h4{margin-bottom:8px; font-size:1.05rem;}
+  .bonus-card p{color:var(--mid); font-size:.92rem;}
+
+  /* ============ PRICING ============ */
+  .pricing{
+    background:var(--navy); border-radius:22px; padding:52px; color:#fff;
+    display:grid; grid-template-columns:1.2fr .8fr; gap:40px; align-items:center; position:relative; overflow:hidden;
+  }
+  .pricing::before{
+    content:""; position:absolute; left:-100px; bottom:-100px; width:260px; height:260px; border-radius:50%;
+    background:var(--navy-l); opacity:.5;
+  }
+  .pricing-left{position:relative; z-index:2;}
+  .pricing h2{font-size:1.9rem; margin-bottom:14px; color:#fff;}
+  .pricing p{color:#C8D8E4; font-size:.98rem; margin-bottom:8px;}
+  .pricing ul{margin:18px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .pricing li{display:flex; gap:10px; font-size:.95rem; align-items:flex-start;}
+  .pricing li .ck{
+    flex:none; width:20px; height:20px; border-radius:50%; background:var(--mint);
+    display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:800; color:#fff; margin-top:2px;
+  }
+  .price-box{
+    background:#fff; color:var(--dark); border-radius:16px; padding:34px; text-align:center; position:relative; z-index:2;
+  }
+  .price-box .old{color:var(--mid); text-decoration:line-through; font-size:1rem;}
+  .price-box .new{font-family:'Fraunces',serif; font-size:3rem; color:var(--navy); font-weight:700; margin:6px 0 4px;}
+  .price-box .new span{font-size:1.1rem; color:var(--mid); font-weight:500; font-family:'Inter',sans-serif;}
+  .price-box .note{font-size:.82rem; color:var(--mid); margin-bottom:18px;}
+  .price-box .btn-primary{width:100%; justify-content:center; font-size:1.05rem;}
+  .price-box .secure{
+    margin-top:14px; font-size:.78rem; color:var(--mid); display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+
+  /* ============ FAQ ============ */
+  .faq{display:flex; flex-direction:column; gap:14px; max-width:760px;}
+  .faq-item{background:#fff; border:1px solid var(--border); border-radius:12px; padding:20px 22px;}
+  .faq-item h4{font-size:1rem; color:var(--navy); margin-bottom:6px;}
+  .faq-item p{color:var(--mid); font-size:.94rem;}
+
+  /* ============ FOOTER ============ */
+  footer{background:var(--navy); color:#C8D8E4; padding:36px 0; text-align:center; font-size:.85rem;}
+  footer b{color:#fff;}
+
+  @media (max-width:860px){
+    .hero-inner{grid-template-columns:1fr;}
+    .device-row{height:240px; transform:scale(.85);}
+    .toc-part{grid-template-columns:1fr;}
+    .audience{padding:30px;}
+    .pricing{grid-template-columns:1fr; padding:32px;}
+    .highlight{grid-template-columns:1fr; text-align:left;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="wrap hero-inner">
+    <div>
+      <span class="eyebrow">★ Digitales Ratgeber-eBook · PDF</span>
+      <h1>Pause vom Screen.<br><span class="accent">Nicht vom Leben.</span></h1>
+      <p class="lead">Der wissenschaftlich fundierte Praxis-Guide für Kinder, Teens und Erwachsene – für mehr echtes Leben neben dem Bildschirm. Mit Familien-Plan, Belohnungstafeln, 30-Tage-Challenge und digitalem Werkzeugkasten.</p>
+      <div class="cta-row">
+        <a href="#preis" class="btn btn-primary">Jetzt sichern – 17,90&nbsp;€</a>
+        <a href="#inhalt" class="btn btn-ghost">Inhalte ansehen</a>
+      </div>
+    </div>
+    <div class="device-row">
+      <div class="phone p1">
+        <div class="dot" style="top:14px; right:14px;"></div>
+        <div class="line" style="width:70%"></div>
+        <div class="line" style="width:50%"></div>
+        <div class="line" style="width:80%"></div>
+        <div class="line" style="width:40%"></div>
+      </div>
+      <div class="phone p2">
+        <div class="dot" style="top:14px; right:14px;"></div>
+        <div class="dot" style="top:34px; right:14px;"></div>
+        <div class="line" style="width:60%"></div>
+        <div class="line" style="width:90%"></div>
+        <div class="line" style="width:45%"></div>
+      </div>
+      <div class="pause-line"></div>
+      <div class="phone p3"><div class="moon">II</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAIN POINTS ============ -->
+<section>
+  <div class="wrap">
+    <span class="tag center" style="display:block;">Die Ausgangslage</span>
+    <h2 class="section-title center">Bildschirmzeit ist kein Charakterproblem – sondern Biologie</h2>
+    <p class="section-lead center">Apps werden von Verhaltenspsychologen auf maximale Verweildauer optimiert. Das Ergebnis lässt sich in Zahlen messen:</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <span class="num">58–80×</span>
+        <h4>Handy-Entsperrungen</h4>
+        <p>So oft greifen Erwachsene durchschnittlich pro Tag zum Smartphone – meist ohne bewusste Entscheidung.</p>
+      </div>
+      <div class="pain-card">
+        <span class="num">9–11h</span>
+        <h4>Bildschirmzeit bei Jugendlichen</h4>
+        <p>Laut DAK-Studie verbringen Teens täglich diese Zeit vor Bildschirmen – ca. 70&nbsp;% davon passiv.</p>
+      </div>
+      <div class="pain-card">
+        <span class="num">23 Min.</span>
+        <h4>Bis zur Ablenkung</h4>
+        <p>So schnell verliert das Gehirn nach Fokusarbeit die Konzentration – durch eine einzige Benachrichtigung.</p>
+      </div>
+      <div class="pain-card">
+        <span class="num">~25</span>
+        <h4>Jahre bis zur Impulskontrolle</h4>
+        <p>Erst dann ist der präfrontale Kortex vollständig entwickelt – bis dahin wirken Belohnungsreize 3× stärker.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOR WHOM ============ -->
+<section style="padding-top:0;">
+  <div class="wrap">
+    <div class="audience">
+      <div>
+        <div class="icon icon-mint">👨‍👩‍👧</div>
+        <h3>Für Eltern</h3>
+        <p>Ein gemeinsamer Familien-Medienplan statt täglicher Konflikte – altersgerecht, ohne schlechtes Gewissen.</p>
+      </div>
+      <div>
+        <div class="icon icon-coral">📱</div>
+        <h3>Für Kinder &amp; Teens</h3>
+        <p>Verständliche Erklärungen, warum Apps so fesseln – und konkrete Ideen für ein Leben neben dem Screen.</p>
+      </div>
+      <div>
+        <div class="icon icon-gold">🧠</div>
+        <h3>Für Erwachsene</h3>
+        <p>Der eigene Screen-Reset: weniger Scrollen, mehr Fokus, bessere Erreichbarkeits-Strategien für den Alltag.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<section id="inhalt">
+  <div class="wrap">
+    <span class="tag">Das erwartet dich</span>
+    <h2 class="section-title">14 Kapitel in 5 Teilen – verständlich, praxisnah, sofort umsetzbar</h2>
+    <p class="section-lead">Vom Verständnis der Dopamin-Mechanik bis zum digitalen Werkzeugkasten für Eltern: Jeder Teil baut auf dem vorherigen auf.</p>
+
+    <div class="toc">
+      <div class="toc-part">
+        <div>
+          <div class="toc-part-label">Teil 1</div>
+          <div class="toc-part-title">Verstehen – Das Gehirn im Scroll-Modus</div>
+        </div>
+        <div class="toc-chapters">
+          <div class="toc-chapter"><div class="badge">1</div><div class="ctxt"><b>Dopamin und der Sog der App-Industrie</b> – wie Belohnungssysteme im Gehirn funktionieren</div></div>
+          <div class="toc-chapter"><div class="badge">2</div><div class="ctxt"><b>Das Dual-Screen-Phänomen</b> – warum wir nie nur eine Sache tun</div></div>
+          <div class="toc-chapter"><div class="badge">3</div><div class="ctxt"><b>Früher vs. Heute</b> – warum der Vergleich mit der eigenen Kindheit hinkt</div></div>
+          <div class="toc-chapter"><div class="badge">4</div><div class="ctxt"><b>Gewohnheiten verstehen und ersetzen</b> – die Ersatz-Methode</div></div>
+          <div class="toc-chapter"><div class="badge">5</div><div class="ctxt"><b>Der Dopamin-Reset</b> – gesunde Quellen statt Billig-Kicks</div></div>
+        </div>
+      </div>
+
+      <div class="toc-part">
+        <div>
+          <div class="toc-part-label">Teil 2</div>
+          <div class="toc-part-title">Für dich selbst – weniger online</div>
+        </div>
+        <div class="toc-chapters">
+          <div class="toc-chapter"><div class="badge">6</div><div class="ctxt"><b>Bist auch du betroffen?</b> – ehrlicher Selbsttest für Erwachsene</div></div>
+          <div class="toc-chapter"><div class="badge">7</div><div class="ctxt"><b>Dein persönlicher Screen-Reset</b> – mit 5-Tage-Selbsttest</div></div>
+          <div class="toc-chapter"><div class="badge">8</div><div class="ctxt"><b>Die Erreichbarkeits-Falle</b> – dein persönliches Erreichbarkeits-System</div></div>
+        </div>
+      </div>
+
+      <div class="toc-part">
+        <div>
+          <div class="toc-part-label">Teil 3</div>
+          <div class="toc-part-title">Als Elternteil – Kinder und Teens begleiten</div>
+        </div>
+        <div class="toc-chapters">
+          <div class="toc-chapter"><div class="badge">9</div><div class="ctxt"><b>Bildschirmzeit neu denken</b> – Qualität &amp; Alter statt nur Minuten</div></div>
+          <div class="toc-chapter"><div class="badge">10</div><div class="ctxt"><b>Der Familien-Plan, der hält</b> – gemeinsam entwickelt statt verordnet</div></div>
+          <div class="toc-chapter"><div class="badge">11</div><div class="ctxt"><b>Konflikte lösen ohne Eskalation</b> – die 5-Minuten-Vorwarnung</div></div>
+        </div>
+      </div>
+
+      <div class="toc-part">
+        <div>
+          <div class="toc-part-label">Teil 4</div>
+          <div class="toc-part-title">Das echte Leben – Alternativen die zählen</div>
+        </div>
+        <div class="toc-chapters">
+          <div class="toc-chapter"><div class="badge">12</div><div class="ctxt"><b>Hinter dem Griff zum Handy</b> – Bedürfnisse erkennen &amp; echt erfüllen</div></div>
+          <div class="toc-chapter"><div class="badge">13</div><div class="ctxt"><b>Langeweile ist kein Fehler</b> – die Langweile-Kiste &amp; Ideen nach Alter</div></div>
+        </div>
+      </div>
+
+      <div class="toc-part">
+        <div>
+          <div class="toc-part-label">Teil 5 · Neu</div>
+          <div class="toc-part-title">Für Profis – Dein digitaler Werkzeugkasten</div>
+        </div>
+        <div class="toc-chapters">
+          <div class="toc-chapter">
+            <div class="badge new">14</div>
+            <div class="ctxt"><b>Der digitale Werkzeugkasten</b> – Family Link, Apple Bildschirmzeit, Fritz!Box-Einstellungen, OurPact &amp; Co. im Vergleich – inkl. Schritt-für-Schritt-Anleitung<span class="new-tag">Neu in dieser Ausgabe</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HIGHLIGHT NEW CHAPTER ============ -->
+<section style="padding-top:0;">
+  <div class="wrap">
+    <div class="highlight">
+      <div class="badge-lg"><span>KAPITEL</span><b>14</b></div>
+      <div>
+        <h3>Neu: Der digitale Werkzeugkasten – Leitplanken statt Dauerstress</h3>
+        <p>Komplett überarbeitete Ausgabe mit brandneuem Kapitel: Technik richtig einsetzen, ohne dass Streit entsteht. Von kostenlosen Bordmitteln bis zur Profi-Lösung – verständlich erklärt, ohne IT-Studium.</p>
+        <ul>
+          <li>Google Family Link &amp; Apple Bildschirmzeit</li>
+          <li>Fritz!Box-Kindersicherung &amp; Gäste-WLAN</li>
+          <li>Die häufigsten Tricks der Kids – und wie du sie austrickst</li>
+          <li>MDM-Vergleich: OurPact, Salfeld, Jamf Now</li>
+          <li>Schritt-für-Schritt-Anleitung zur Einrichtung</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BONUS ============ -->
+<section>
+  <div class="wrap">
+    <span class="tag">Bonusmaterial</span>
+    <h2 class="section-title">Direkt zum Ausdrucken – für die ganze Familie</h2>
+    <p class="section-lead">Theorie allein reicht nicht. Deshalb enthält das eBook praktische Vorlagen, die sofort eingesetzt werden können.</p>
+    <div class="bonus-grid">
+      <div class="bonus-card">
+        <h4>📋 Belohnungstafel</h4>
+        <p>Wöchentliche Tracking-Tabelle für gesunde Bildschirm-Gewohnheiten – ausdrucken &amp; abhaken.</p>
+      </div>
+      <div class="bonus-card b2">
+        <h4>🏆 Etappen-Plan</h4>
+        <p>4 aufeinander aufbauende Etappen vom ersten Bewusstwerden bis zum Screen-Champion – inklusive Belohnungen.</p>
+      </div>
+      <div class="bonus-card b3">
+        <h4>📅 30-Tage-Challenge</h4>
+        <p>Jeden Tag ein kleiner Schritt – mit eingebauten Reflexions-Tagen für nachhaltige Veränderung.</p>
+      </div>
+      <div class="bonus-card b4">
+        <h4>📦 Langweile-Kiste</h4>
+        <p>Konkrete Ideen nach Altersgruppen (3–6, 7–12, Teens &amp; Erwachsene) für echte Beschäftigung ohne Screen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section id="preis">
+  <div class="wrap">
+    <div class="pricing">
+      <div class="pricing-left">
+        <h2>Hol dir den kompletten Guide</h2>
+        <p>Sofort als PDF herunterladen – lesbar auf Smartphone, Tablet, E-Reader oder am PC. Einmal kaufen, für immer behalten.</p>
+        <ul>
+          <li><span class="ck">✓</span> 14 Kapitel in 5 Teilen, über 35 Seiten Praxiswissen</li>
+          <li><span class="ck">✓</span> Wissenschaftlich fundiert, alltagsnah erklärt</li>
+          <li><span class="ck">✓</span> Belohnungstafel, Etappen-Plan &amp; 30-Tage-Challenge</li>
+          <li><span class="ck">✓</span> Digitaler Werkzeugkasten mit Schritt-für-Schritt-Anleitung</li>
+          <li><span class="ck">✓</span> Sofortiger Download nach dem Kauf</li>
+        </ul>
+      </div>
+      <div class="price-box">
+        <div class="old">statt 29,90 €</div>
+        <div class="new">17,90&nbsp;<span>€</span></div>
+        <div class="note">Einmalzahlung · sofortiger PDF-Download</div>
+        <!-- Digistore24 Buy-Button: Platzhalter-Link einfügen -->
+        <a href="#" class="btn btn-primary">Jetzt herunterladen</a>
+        <div class="secure">🔒 Sichere Zahlung über Digistore24</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section>
+  <div class="wrap">
+    <span class="tag">Häufige Fragen</span>
+    <h2 class="section-title">Noch Fragen?</h2>
+    <div class="faq">
+      <div class="faq-item">
+        <h4>In welchem Format erhalte ich das eBook?</h4>
+        <p>Als PDF-Datei – optimiert für Smartphone, Tablet, E-Reader und Desktop. Sofort nach dem Kauf zum Download verfügbar.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Für welches Alter ist der Ratgeber geeignet?</h4>
+        <p>Das eBook richtet sich an Eltern von Kindern und Teens jeden Alters sowie an Erwachsene, die ihren eigenen Umgang mit dem Smartphone verbessern möchten. Die Bonusmaterialien sind nach Altersgruppen (3–6, 7–12, Teens) gegliedert.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Brauche ich technisches Vorwissen für Kapitel 14?</h4>
+        <p>Nein. Das neue Kapitel erklärt alle Tools – von kostenlosen Bordmitteln bis zu professionellen Lösungen – in einfachen Schritten, ganz ohne IT-Erfahrung.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Wie erfolgt die Bezahlung?</h4>
+        <p>Die Bestellung läuft sicher über Digistore24 – mit allen gängigen Zahlungsmethoden wie PayPal, Kreditkarte oder Sofortüberweisung.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>Pause vom Screen. Nicht vom Leben.</b><br>Für Kinder, Teens und alle Erwachsenen, die mehr vom echten Leben wollen.</p>
+    <p style="margin-top:10px;">© 2026 – Alle Rechte vorbehalten · Vertrieb über Digistore24</p>
+  </div>
+</footer>
+
+</body>
+</html>
